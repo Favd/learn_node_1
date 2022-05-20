@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Enter page</title>
+</head>
+<body>
+<div><b> Metod GET</b></div>
+<form action=" http://localhost:8000" method="get">
+    <div>
+        <label for="nicName1">Nic name</label>
+        <input name="nicName" id="nicName1" value="Enter nic name">
+    </div>
+    <div>
+        <label for="fullName1">Full name</label>
+        <input name="fullName" id="fullName1" value="----">
+    </div>
+    <div>
+        <button>Enter</button>
+    </div>
+</form>
+
+<div><br><b> Metod POST</b></div>
+<form action="http://localhost:8000" method="post" name="formInp">
+    <div>
+        <label for="nicName2">Nic name</label>
+        <input name="nicName" id="nicName2" value="Enter nic name">
+    </div>
+    <div>
+        <label for="fullName2">Full name</label>
+        <input name="fullName" id="fullName2" value="----">
+    </div>
+    <div>
+        <button>Enter</button>
+    </div>
+</form>
+
+<div><br><h1>Enter</h1></div>
+<form name="enterForm">
+    <label>Nic name</label></br>
+    <input type="text" name="nicName"></br></br>
+    <label>password</label></br>
+    <input type="text" name="password"></br></br>
+    <button type="submit" id="submit">Send</button>
+</form>
+<br>
+<div id = "enterResultText"></div>
+<br><br>
+
+<div><br><h1>Registration</h1></div>
+<form name="registerForm">
+    <label>Nic name</label></br>
+    <input type="text" name="nicName"></br></br>
+    <label>Full name</label></br>
+    <input type="text" name="fullName"></br></br>
+    <label>password</label></br>
+    <input type="text" name="password"></br></br>
+    <button type="submitRegistration" id="submitRegistration">Registr</button>
+</form>
+<br>
+<div id = "registerResultText"></div>
+
+<script>
+
+    document.getElementById("submitRegistration").addEventListener("click", function (e) {
+        e.preventDefault();
+        // получаем данные формы
+        let registerForm = document.forms["registerForm"];
+        let nicName = registerForm.elements["nicName"].value;
+        let fullName = registerForm.elements["fullName"].value;
+        let password = registerForm.elements["password"].value;
+        // сериализуем данные в json
+        let user = JSON.stringify({nicName: nicName, fullName: fullName, password: password, stepEnter: false});
+        let request = new XMLHttpRequest();
+        // посылаем запрос на адрес "/user"
+        request.open("POST", "", true);
+        request.responseType = 'json';
+        request.setRequestHeader("Content-Type", "application/json");
+        request.addEventListener("load", function () {
+            console.log(request.status);
+            console.log(request.response);   // смотрим ответ сервера
+            if(request.status == 200){
+                document.getElementById("registerResultText").innerHTML = request.response.textStatus;
+            }
+        });
+        request.send(user);
+    });
+
+    document.getElementById("submit").addEventListener("click", function (e) {
+        e.preventDefault();
+        // получаем данные формы
+        let enterForm = document.forms["enterForm"];
+        let nicName = enterForm.elements["nicName"].value;
+        let password = enterForm.elements["password"].value;
+        // сериализуем данные в json
+        let user = JSON.stringify({nicName: nicName, password: password, stepEnter: true});
+
+        fetch("", {method:'POST', headers:{'Content-Type': 'application/json;charset=utf-8'}, body:user})
+            .then(function(response) {
+                console.log("status " + response.ok);
+                if (response.ok){
+                    response.json().then(function(json) {
+                        console.log(json);
+                        document.getElementById("enterResultText").innerHTML = json.textStatus;
+                    });
+                } else {"status erroor" }
+            });
+    });
+</script>
+
+</body>
+</html>
