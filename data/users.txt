@@ -1,0 +1,1 @@
+[{"nameNic":"vlad","fullName":"FylymonOvv","userPassword":"111"},{"nameNic":"Olga","fullName":"Art","userPassword":"222"},{"nameNic":"Pit","fullName":"","userPassword":"555"}]
